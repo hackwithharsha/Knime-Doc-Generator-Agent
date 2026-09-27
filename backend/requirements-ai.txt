@@ -1,0 +1,6 @@
+# CrewAI core only — deliberately NOT crewai[tools]/crewai-tools, which pulls in
+# embedchain -> qdrant-client -> mem0ai -> a full LangChain graph that blew past
+# pip's resolver round limit in Stage 0. This MVP's agents use no tools (see
+# CLAUDE.md), so there is no reason to install that dependency tree.
+crewai[anthropic]==1.15.22
+pyyaml==6.0.3

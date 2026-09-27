@@ -1,0 +1,76 @@
+analyze_workflow:
+  name: analyze_workflow
+  agent: workflow_analyst
+  description: >-
+    Analyze the following parsed KNIME workflow (JSON). It contains the
+    workflow's name, description/annotations, nodes (each with id, name,
+    factory, node_type, annotation, settings, flow_variables, and
+    is_source/is_sink flags), connections, and flow variables. Nested
+    metanodes/components appear as a node's "children" field, recursively,
+    with their own nodes/connections.
+
+    Workflow JSON:
+    {workflow_json}
+
+    Produce a structured analysis with exactly three parts:
+
+    1. Inputs — for each source node (is_source=true, or a node with no
+       incoming connections that reads external data), give: the node name
+       verbatim, its data type/format (inferred from its factory and
+       settings — e.g. "SQLite database", "Excel file", "in-memory table"),
+       and its location/identifier (file path, table name, connection
+       target) using exactly what appears in the settings. Never invent a
+       path, table name, or format that isn't in the JSON.
+    2. Outputs — the same fields, for sink nodes (is_sink=true, or nodes
+       with no outgoing connections that write or export data).
+    3. Transformation steps — the remaining nodes, grouped into a small
+       number of logical stages (e.g. "filtering", "joining", "retry
+       loop"), each stage listing the node names it contains and one short,
+       structurally-grounded sentence of what that stage does.
+
+    Rules: use node names verbatim from the JSON. Do not describe business
+    purpose or intent unless it is explicitly stated in a description or
+    annotation field — if the workflow has no top-level description, say so
+    plainly instead of guessing at one. Do not invent column names, table
+    contents, or logic beyond what the settings show.
+  expected_output: >-
+    A structured markdown analysis with three headed sections (Inputs,
+    Outputs, Transformation Steps) as described above. Concise — bullet
+    points and short sentences, no prose paragraphs.
+
+write_doc:
+  name: write_doc
+  agent: doc_writer
+  context:
+    - analyze_workflow
+  markdown: true
+  description: >-
+    Using the workflow analysis produced by the previous task, write the
+    final documentation in Markdown. The document must contain exactly these
+    five sections, in this order, with these exact headings:
+
+    ## Purpose
+    ## Inputs
+    ## Outputs
+    ## Transformation Steps
+    ## Notes
+
+    Purpose: one short paragraph stating what problem the workflow solves.
+    If the analysis doesn't state a business purpose (no description or
+    annotation supports one), write exactly: "To be confirmed by workflow
+    owner." Do not guess at intent.
+
+    Inputs / Outputs / Transformation Steps: restate the analysis concisely
+    as bullets or numbered steps. Node names verbatim.
+
+    Notes: caveats, known limitations, or configuration details worth
+    flagging (e.g. hardcoded paths, retry logic, credential handling) drawn
+    only from the analysis. If there is nothing notable, write "None."
+
+    Rules: concise, plain language, no marketing words ("powerful",
+    "robust", "seamlessly", "cutting-edge"). Never state a fact that isn't
+    supported by the analysis above.
+  expected_output: >-
+    A complete Markdown document with exactly the five required section
+    headings, in order, with concise bullets/short paragraphs and no
+    invented details.

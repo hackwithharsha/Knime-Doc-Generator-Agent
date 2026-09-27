@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #fbfaf7;
+  color: #1c2321;
+}
+
+/* Visible keyboard focus everywhere — never remove an outline without replacing it. */
+:focus-visible {
+  outline: 2px solid #1f4e79;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/*
+ * react-markdown emits plain h2/ul/table/etc with no built-in styling
+ * (Tailwind's preflight strips browser defaults too). Scoped rules here
+ * instead of pulling in @tailwindcss/typography — one small stylesheet
+ * beats another dependency for a handful of elements. Echoes the PDF
+ * exporter's CSS (app/exporters/pdf_exporter.py) so the in-browser preview
+ * and the downloaded PDF feel like the same document.
+ */
+.doc-markdown h2 {
+  margin: 1.5em 0 0.5em;
+  border-bottom: 1px solid #d8d4c9;
+  padding-bottom: 0.25em;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #1f4e79;
+}
+.doc-markdown h2:first-child {
+  margin-top: 0;
+}
+.doc-markdown h3 {
+  margin: 1.2em 0 0.4em;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f4e79;
+}
+.doc-markdown p {
+  margin: 0.6em 0;
+  line-height: 1.6;
+}
+.doc-markdown ul,
+.doc-markdown ol {
+  margin: 0.4em 0 0.8em;
+  padding-left: 1.4em;
+}
+.doc-markdown ul {
+  list-style: disc;
+}
+.doc-markdown ol {
+  list-style: decimal;
+}
+.doc-markdown li {
+  margin: 0.25em 0;
+  line-height: 1.55;
+}
+.doc-markdown li > ul,
+.doc-markdown li > ol {
+  margin: 0.25em 0;
+}
+.doc-markdown code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: #ece9e2;
+  padding: 0.1em 0.35em;
+  font-size: 0.9em;
+}
+.doc-markdown table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0.6em 0 1em;
+}
+.doc-markdown th,
+.doc-markdown td {
+  border: 1px solid #d8d4c9;
+  padding: 0.4em 0.6em;
+  text-align: left;
+  font-size: 0.9rem;
+}
+.doc-markdown th {
+  background: #1f4e79;
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,38 @@
+# ── Web framework ─────────────────────────────────────────────────────────────
+fastapi==0.115.0
+uvicorn[standard]==0.32.0  # pinned to satisfy crewai's mcp dep, which needs uvicorn>=0.31.1
+
+# ── Database ──────────────────────────────────────────────────────────────────
+sqlalchemy[asyncio]==2.0.35
+asyncpg==0.29.0
+alembic==1.13.3
+# Sync driver for the Celery worker's DB session — see CLAUDE.md "Sync vs.
+# async DB access": the worker writes progress events synchronously from
+# inside crewai's blocking crew.kickoff() call, where there is no event loop
+# to await into.
+psycopg2-binary==2.9.9
+
+# ── Task queue ────────────────────────────────────────────────────────────────
+celery==5.4.0
+redis==5.1.0
+
+# ── Validation & utils ────────────────────────────────────────────────────────
+pydantic==2.12.0  # pinned within crewai==1.15.22's pydantic>=2.11.9,<2.13 requirement
+pydantic-settings==2.14.2  # pinned to satisfy crewai==1.15.22's pydantic-settings>=2.14.2 requirement
+python-multipart==0.0.12
+aiofiles==24.1.0
+defusedxml==0.7.1
+
+# ── Testing ───────────────────────────────────────────────────────────────────
+pytest==8.3.3
+pytest-asyncio==0.24.0
+httpx==0.28.1  # pinned to satisfy crewai==1.15.22's httpx~=0.28.1 requirement
+
+# ── AI (see requirements-ai.txt) ────────────────────────────────────────────────
+# crewai, anthropic
+
+# ── Document export ───────────────────────────────────────────────────────────
+python-docx==1.1.2
+weasyprint==70.0  # needs libpango-1.0-0, libpangoft2-1.0-0, libharfbuzz-subset0 (see Dockerfile) —
+                  # modern WeasyPrint (v53+) dropped the old cairo/gdk-pixbuf dependency chain.
+markdown-it-py==4.2.0  # markdown -> token stream (DOCX) / -> HTML (PDF via WeasyPrint)
